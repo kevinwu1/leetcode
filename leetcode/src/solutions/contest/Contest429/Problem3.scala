@@ -1,5 +1,6 @@
 package solutions.contest.Contest429
 
+import leetcode.macros.Macros.logged
 import solutions.contest.Contest429.Problem3.Solution.minLength
 
 import scala.util.chaining.scalaUtilChainingOps
@@ -16,8 +17,8 @@ object Problem3 {
         println("special")
         1
       } else {
+        @logged
         def findLowestFalse(lo: Int, hi: Int, test: Int => Boolean): Int = {
-          println(s"flf $lo $hi")
           if (lo + 1 == hi)
             hi
           else {
@@ -38,6 +39,9 @@ object Problem3 {
                 (curCount :: allcounts, 1, c)
           }
         val counts = b :: a
+
+        println(6)
+        @logged
         def isPossible(i: Int): Boolean = {
           val r = counts
             .filter(_ > i)
@@ -56,7 +60,7 @@ object Problem3 {
   }
 
   def main(args: Array[String]): Unit = {
-    minLength("1001", 1)
+    minLength("00001", 1)
       .pipe(println)
   }
 }

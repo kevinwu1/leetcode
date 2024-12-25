@@ -1,4 +1,4 @@
-package solutions.contest.`429`
+package solutions.contest.Contest429
 
 object Problem2 {
   object Solution {

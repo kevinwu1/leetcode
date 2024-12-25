@@ -1,6 +1,12 @@
 package solutions
 
 object Util {
+  def parseArrayIntOrNull(s: String): Array[Option[Int]] = {
+    s.stripPrefix("[")
+      .stripSuffix("]")
+      .split(",")
+      .map(x => if (x == "null") None else Some(x.toInt))
+  }
   def parseArrayInt(s: String): Array[Int] = {
     s.stripPrefix("[").stripSuffix("]").split(",").map(_.toInt)
   }
