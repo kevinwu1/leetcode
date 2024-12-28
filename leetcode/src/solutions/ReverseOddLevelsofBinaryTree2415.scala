@@ -1,18 +1,10 @@
 package solutions
 
 import scala.util.chaining._
+import solutions.Util.TreeNode
+import solutions.Util.treeify
 
 object ReverseOddLevelsofBinaryTree2415 {
-
-  class TreeNode(
-      _value: Int = 0,
-      _left: TreeNode = null,
-      _right: TreeNode = null
-  ) {
-    var value: Int = _value
-    var left: TreeNode = _left
-    var right: TreeNode = _right
-  }
 
   import scala.annotation.tailrec
   object Solution {
@@ -68,24 +60,9 @@ object ReverseOddLevelsofBinaryTree2415 {
   def main(args: Array[String]): Unit = {
 
     val data = Util.parseArrayInt("[2,3,5,8,13,21,34]")
-    def treeify(from: Int): TreeNode = {
-      val n = new TreeNode(_value = data(from))
-      if (from * 2 + 1 < data.length) {
-        n.left = treeify(from * 2 + 1)
-        n.right = treeify(from * 2 + 2)
-      }
-      n
-    }
-    implicit class tnimplicits2(tn: TreeNode) {
-      def pretty: String = {
-        if (tn.left == null) {
-          tn.value.toString()
-        } else
-          s"[${tn.left.pretty}|${tn.value}|${tn.right.pretty}]"
-      }
-    }
+
     Solution
-      .reverseOddLevels(treeify(0))
+      .reverseOddLevels(treeify(data))
       .pretty
       .pipe(println)
   }

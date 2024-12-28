@@ -25,7 +25,7 @@ object FindMinimumDiameterAfterMergingTwoTrees3203 {
             }
       }
 
-      @logged
+      // @logged
       def getRadiusAndDiam(e: Array[Array[Int]]): (Int, Int) = {
         if (e.length == 0)
           (0, 0)
@@ -34,13 +34,12 @@ object FindMinimumDiameterAfterMergingTwoTrees3203 {
         else {
           val tree = Tree(e)
           val root = tree.edges.find(_._2.size >= 2).get._1
-          @logged
+          // @logged
           def getDiamAndDepth(root: Int, parent: Int): (Int, Int) = {
             implicit class nodeImpl(i: Int) {
               def edges: Set[Int] = tree.edges(i)
             }
             val children = root.edges - parent
-            leetcode.macros.Macros.indentPrintln(children)
             if (children.isEmpty) {
               (0, 0)
             } else {
