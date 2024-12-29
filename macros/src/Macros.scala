@@ -35,7 +35,7 @@ object Macros {
           val res = q"""$mods def $name[..$tparams](...$paramss): $tpt = {
             ${c.parse(printParam)}
             leetcode.macros.Macros.indentation += 1
-            val macro_finalanswer={${rhs}}
+            val macro_finalanswer: $tpt={${rhs}}
             leetcode.macros.Macros.indentation -= 1
             ${c.parse(printParam2)}
             macro_finalanswer

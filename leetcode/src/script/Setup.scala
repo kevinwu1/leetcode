@@ -1,7 +1,8 @@
 package script
 object Setup {
   def main(args: Array[String]): Unit = {
-    val name = (args.tail :+ args.head).mkString.replace(".", "")
+    val name =
+      (args.tail :+ args.head).mkString.replace(".", "").replace("-", "")
     os.write(
       os.pwd / "leetcode" / "src" / "solutions" / s"$name.scala",
       s"""package solutions
