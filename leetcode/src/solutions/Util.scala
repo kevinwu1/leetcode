@@ -10,6 +10,9 @@ object Util {
   def parseArrayInt(s: String): Array[Int] = {
     s.stripPrefix("[").stripSuffix("]").split(",").map(_.toInt)
   }
+  def parseArrayString(s: String): Array[String] = {
+    s.stripPrefix("[\"").stripSuffix("\"]").split("\",\"")
+  }
   def parseArrayArrayInt(s: String): Array[Array[Int]] = {
     s.stripPrefix("[[")
       .stripSuffix("]]")
