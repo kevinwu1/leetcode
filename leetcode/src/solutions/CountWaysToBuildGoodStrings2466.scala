@@ -27,7 +27,7 @@ object CountWaysToBuildGoodStrings2466 {
       for (i <- 0 until Math.min(low, adLen)) {
         ad += getWays(i)
       }
-      println(lInd + ":: " + ad)
+      // println(lInd + ":: " + ad)
       while (lInd + ad.length < low) {
         // increase until low
         ad += getWays(lInd + ad.length)
@@ -36,7 +36,7 @@ object CountWaysToBuildGoodStrings2466 {
           lInd += 1
         }
       }
-      println(lInd + ":: " + ad)
+      // println(lInd + ":: " + ad)
       for (i <- low to high) {
         val ways = getWays(i)
         ad += ways
