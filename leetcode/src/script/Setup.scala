@@ -12,6 +12,7 @@ import solutions.Util._
 
 import scala.util.chaining._
 
+@scala.annotation.experimental
 object $name {
   //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
   

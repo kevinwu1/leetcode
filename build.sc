@@ -4,7 +4,7 @@ import mill._
 import scalalib._
 
 object Shared {
-  val _scalaVersion = "2.13.15"
+  val _scalaVersion = "3.3.1"
   val _ivyDeps = Agg(
     ivy"com.lihaoyi::scalatags:0.12.0",
     ivy"com.lihaoyi::mainargs:0.6.2",
@@ -19,14 +19,9 @@ object leetcode extends ScalaModule {
   def ivyDeps = _ivyDeps
 
   override def moduleDeps = Seq(macros)
-  def scalacOptions = Seq("-Ymacro-annotations")
 }
 
 object macros extends ScalaModule {
   def scalaVersion = _scalaVersion
-  def ivyDeps = _ivyDeps ++
-    Agg(
-      ivy"org.scala-lang:scala-reflect:2.13.15"
-    )
-  def scalacOptions = Seq("-Ymacro-annotations")
+  def ivyDeps = _ivyDeps
 }

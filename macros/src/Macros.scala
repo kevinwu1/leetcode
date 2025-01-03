@@ -1,64 +1,106 @@
 package leetcode.macros
 
-import scala.annotation.StaticAnnotation
-import scala.annotation.compileTimeOnly
-import scala.language.experimental.macros
-import scala.reflect.macros.whitebox
+import scala.annotation.MacroAnnotation
+import scala.annotation.experimental
+import scala.quoted.*
 
 object Macros {
-  @compileTimeOnly("enable macro paradise to expand macro annotations")
-  class logged extends StaticAnnotation {
-    def macroTransform(annottees: Any*): Any = macro loggedMacro.impl
-  }
+  @experimental
+  class logged extends MacroAnnotation:
+    def transform(using Quotes)(
+        definition: quotes.reflect.Definition
+    ): List[quotes.reflect.Definition] =
+      import quotes.reflect.*
+      definition match
+        case DefDef(
+              name,
+              paramss,
+              tpt,
+              Some(rhs)
+            ) => {
+          val (typeParams, termParams) =
+            paramss.foldLeft(List[TypeParamClause](), List[TermParamClause]()) {
+              case ((tyP, trP), clause) =>
+                clause match {
+                  case typeClause: TypeParamClause => (typeClause :: tyP, trP)
+                  case termClause: TermParamClause => (tyP, termClause :: trP)
+                }
+            }
+          val res = tpt.tpe.asType match {
+            case '[t] =>
+              val (paramNames, paramExprs) =
+                termParams
+                  .flatMap(_.params)
+                  .map(x => (x.name, Ref(x.symbol).asExpr))
+                  .unzip
 
-  object loggedMacro {
-    def impl(c: whitebox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
-      import c.universe._
-      val inputs = annottees.map(_.tree).toList
-      val tree = annottees
-      val transformed = inputs match {
-        case (q"$mods def $name[..$tparams](...$paramss): $tpt = $rhs") :: _ => {
-          val params = paramss.flatten.map(vd => {
-            vd.name.toString
-          })
-          val printParam =
-            s"println(leetcode.macros.Macros.indent + s\"${name.toString}(${params
-                .map(p => p + "=${pprint.apply(" + p + ").render}")
-                .mkString(", ")})\")"
-
-          val printParam2 =
-            s"println(leetcode.macros.Macros.indent + s\"${name.toString}(${params
-                .map(p => p + "=${pprint.apply(" + p + ").render}")
-                .mkString(", ")}) = \" + macro_finalanswer)"
-
-          val fname = s"\"${name.toString}\""
-          val res = q"""$mods def $name[..$tparams](...$paramss): $tpt = {
-            ${c.parse(printParam)}
-            leetcode.macros.Macros.indentation += 1
-            val macro_finalanswer: $tpt={${rhs}}
-            leetcode.macros.Macros.indentation -= 1
-            ${c.parse(printParam2)}
-            macro_finalanswer
-        }"""
+              val fname = name.toString
+              val rhsExpr = rhs.asExprOf[t]
+              given Quotes = definition.symbol.asQuotes
+              val res = '{
+                {
+                  println(
+                    indent + ${ Expr(fname) } + ${
+                      Expr(paramNames)
+                    }.zip(${ Expr.ofList(paramExprs) })
+                      .map(p => p._1 + "=" + p._2)
+                      .mkString("(", ", ", ")")
+                  )
+                  leetcode.macros.Macros.indentation += 1
+                  val macro_finalanswer = $rhsExpr
+                  leetcode.macros.Macros.indentation -= 1
+                  macro_finalanswer
+                }
+              }.asTerm
+              DefDef.copy(definition)(name, paramss, tpt, rhs = Some(res))
+          }
           println("Macro applied")
-          println(show(res))
-          c.Expr(res)
+          println(res.show)
+          List(res)
         }
-        case x => {
-          println(x.head.getClass())
-          annottees.head
-        }
-      }
-      transformed
-    }
-  }
+
+        case _ =>
+          report.error(
+            "Annotation only supported on `def` with a single argument are supported"
+          )
+          List(definition)
+
+  import scala.collection.concurrent
+
+  @experimental
+  class memoize extends MacroAnnotation:
+    def transform(using Quotes)(
+        definition: quotes.reflect.Definition
+    ): List[quotes.reflect.Definition] =
+      import quotes.reflect._
+      definition match
+        case DefDef(
+              name,
+              paramss,
+              tpt,
+              Some(rhs)
+            ) =>
+          (tpt.tpe.asType) match
+            case ('[u]) =>
+              val newRhs =
+                given Quotes = definition.symbol.asQuotes
+                val rhsExpr = rhs.asExprOf[u]
+                '{
+                  val x = $rhsExpr
+                  x
+                }.asTerm
+              val newTree = DefDef.copy(definition)(
+                name,
+                paramss,
+                tpt,
+                Some(newRhs)
+              )
+              List(newTree)
+        case _ =>
+          report.error(
+            "Annotation only supported on `def` with a single argument are supported"
+          )
+          List(definition)
   var indentation = 0
   def indent: String = "  " * indentation
-  def indentPrintln(s: Any): Unit = println(indent + s)
-
-  def a(s: Any): String = {
-    pprint.apply(Array(Array(1, 2), Array(3, 4, 5, 6, 7))).render
-  }
-
-  def main(args: Array[String]): Unit = println(a(3))
 }

@@ -1,10 +1,10 @@
 package solutions.contest.Contest429
 
 import leetcode.macros.Macros.logged
-import solutions.contest.Contest429.Problem3.Solution.minLength
 
 import scala.util.chaining.scalaUtilChainingOps
 
+@scala.annotation.experimental
 object Problem3 {
   import scala.annotation.tailrec
   object Solution {
@@ -60,7 +60,8 @@ object Problem3 {
   }
 
   def main(args: Array[String]): Unit = {
-    minLength("00001", 1)
+    Solution
+      .minLength("00001", 1)
       .pipe(println)
   }
 }
