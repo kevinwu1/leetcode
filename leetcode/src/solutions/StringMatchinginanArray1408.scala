@@ -29,7 +29,8 @@ object StringMatchinginanArray1408 {
       def stringMatching(words: Array[String]): List[String] = {
         words.sortInPlaceBy(_.length)
         var ans = List[String]()
-        for (i <- words.indices) {
+        var i = 0
+        while (i < words.length) {
           var matched = false
           var j = i + 1
           while (j < words.length) {
@@ -41,6 +42,7 @@ object StringMatchinginanArray1408 {
           }
           if (matched)
             ans :+= words(i)
+          i += 1
         }
         ans
       }
