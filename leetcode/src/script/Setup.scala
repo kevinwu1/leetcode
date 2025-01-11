@@ -27,6 +27,9 @@ object $name {
         ),
         parseArrayArrayInt(
           ""
+        ),
+        parseArrayString(
+          \"\"\"\"\"\"
         )
       )
       .pipe(println)
