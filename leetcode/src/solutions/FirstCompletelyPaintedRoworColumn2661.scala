@@ -25,7 +25,7 @@ object FirstCompletelyPaintedRoworColumn2661 {
         val (ri, ci) = lookup(arr(i))
         colSums(ci) += 1
         rowSums(ri) += 1
-        if (colSums(ci) == rows && rowSums(ri) == cols)
+        if (colSums(ci) == rows || rowSums(ri) == cols)
           return i
         i += 1
       }
