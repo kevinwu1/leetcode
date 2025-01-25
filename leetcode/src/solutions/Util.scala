@@ -8,15 +8,20 @@ object Util {
       .map(x => if (x == "null") None else Some(x.toInt))
   }
   def parseArrayInt(s: String): Array[Int] = {
-    s.stripPrefix("[").stripSuffix("]").split(",").map(_.toInt)
+    if (s.isEmpty())
+      Array()
+    else
+      s.stripPrefix("[").stripSuffix("]").split(",").map(_.toInt)
   }
   def parseArrayString(s: String): Array[String] = {
     s.stripPrefix("[\"").stripSuffix("\"]").split("\",\"")
   }
   def parseArrayArrayInt(s: String): Array[Array[Int]] = {
+    import util.chaining.scalaUtilChainingOps
+
     s.stripPrefix("[[")
       .stripSuffix("]]")
-      .split(raw"],\[")
+      .split(raw"],\[", -1)
       .map(arr => parseArrayInt(arr))
   }
 
