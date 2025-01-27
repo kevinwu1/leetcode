@@ -49,6 +49,14 @@ object Macros {
                   leetcode.macros.Macros.indentation += 1
                   val macro_finalanswer = $rhsExpr
                   leetcode.macros.Macros.indentation -= 1
+                  println(
+                    indent + s"$macro_finalanswer <= " +
+                      ${ Expr(fname) } + ${
+                        Expr(paramNames)
+                      }.zip(${ Expr.ofList(paramExprs) })
+                        .map(p => p._1 + "=" + p._2)
+                        .mkString("(", ", ", ")")
+                  )
                   macro_finalanswer
                 }
               }.asTerm
