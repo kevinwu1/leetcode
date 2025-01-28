@@ -18,11 +18,13 @@ object Util {
   }
   def parseArrayArrayInt(s: String): Array[Array[Int]] = {
     import util.chaining.scalaUtilChainingOps
-
-    s.stripPrefix("[[")
-      .stripSuffix("]]")
-      .split(raw"],\[", -1)
-      .map(arr => parseArrayInt(arr))
+    if (s == "[]")
+      Array()
+    else
+      s.stripPrefix("[[")
+        .stripSuffix("]]")
+        .split(raw"],\[", -1)
+        .map(arr => parseArrayInt(arr))
   }
 
   class TreeNode(
