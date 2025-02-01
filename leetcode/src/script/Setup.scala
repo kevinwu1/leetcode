@@ -59,7 +59,7 @@ object $name {
           \"\"\"\"\"\"
         )
       )
-      .pipe(println)
+      .pipe(pprintln(_))
   }
 
 }
