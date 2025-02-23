@@ -66,6 +66,20 @@ object Util {
     }
   }
 
+  def printTree(
+      tn: TreeNode,
+      parent: Int = -1,
+      childSide: String = "root"
+  ): Unit = {
+    println(s"$parent - $childSide - ${tn.value}")
+    if (tn.left != null) {
+      printTree(tn.left, tn.value, "left")
+    }
+    if (tn.right != null) {
+      printTree(tn.right, tn.value, "right")
+    }
+  }
+
   import scala.annotation.tailrec
   @tailrec
   def bsearchRange(lo: Int, hi: Int, trueIfHigher: Int => Boolean): Int = {
