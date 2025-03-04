@@ -1,9 +1,10 @@
 package solutions
 
 import leetcode.macros.Macros.logged
-import solutions.Util._
 import pprint.pprintln
-import scala.util.chaining._
+import solutions.Util.*
+
+import scala.util.chaining.*
 
 @scala.annotation.experimental
 object PartitionArrayAccordingtoGivenPivot2161 {
@@ -11,7 +12,7 @@ object PartitionArrayAccordingtoGivenPivot2161 {
   object Solution {
     def pivotArray(nums: Array[Int], pivot: Int): Array[Int] = {
       val (less, other) = nums.partition(_ < pivot)
-      val (equal, higher) = nums.partition(_ == pivot)
+      val (equal, higher) = other.partition(_ == pivot)
       less ++ equal ++ higher
     }
   }
