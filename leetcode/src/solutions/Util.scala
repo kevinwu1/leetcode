@@ -83,7 +83,7 @@ object Util {
   import scala.annotation.tailrec
   @tailrec
   def bsearchRange(lo: Int, hi: Int, trueIfHigher: Int => Boolean): Int = {
-    if (lo + 1 == hi)
+    if (lo + 1 >= hi)
       hi
     else {
       val mid = (lo + hi) / 2
