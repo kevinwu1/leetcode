@@ -11,13 +11,9 @@ object HouseRobberIV2560 {
   // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
   object Solution {
     def minCapability(nums: Array[Int], k: Int): Int = {
-      val sorted = nums.sorted
-      val lo = sorted(k - 1) - 1
-      val hi = sorted.last
+      val lo = nums.min
+      val hi = nums.max
 
-      import scala.annotation.tailrec
-
-      // @logged
       def canMake(limit: Int): Boolean = {
         var i = 0
         var needed = k
@@ -31,7 +27,9 @@ object HouseRobberIV2560 {
         }
         needed == 0
       }
+      // @logged
 
+      import scala.annotation.tailrec
       // @logged
       @tailrec
       def bsearchRange(lo: Int, hi: Int): Int = {
@@ -45,7 +43,7 @@ object HouseRobberIV2560 {
             bsearchRange(mid, hi)
         }
       }
-      bsearchRange(lo, hi)
+      bsearchRange(lo - 1, hi)
     }
   }
   // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
