@@ -45,18 +45,18 @@ object MinimumTimetoRepairCars2594 {
         }
         import scala.annotation.tailrec
         @tailrec
-        def bsearchRange(lo: Long, hi: Long): Long = {
+        def bsearch(lo: Long, hi: Long): Long = {
           if (lo + 1 >= hi)
             hi
           else {
             val mid = (lo + hi) / 2
             if (canAchieve(mid))
-              bsearchRange(lo, mid)
+              bsearch(lo, mid)
             else
-              bsearchRange(mid, hi)
+              bsearch(mid, hi)
           }
         }
-        bsearchRange(1, Long.MaxValue)
+        bsearch(1, Long.MaxValue)
       }
     }
   }
