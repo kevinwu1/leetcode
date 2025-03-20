@@ -93,4 +93,35 @@ object Util {
         bsearchRange(lo, mid, trueIfHigher)
     }
   }
+
+  class UnionFind(n: Int) {
+    val rep_ = (0 until n).toArray
+    val size = Array.fill(n)(1)
+
+    def union(a: Int, b: Int): Int = {
+      val ra = find(a)
+      val rb = find(b)
+      if (ra != rb) {
+        val sizea = size(ra)
+        val sizeb = size(rb)
+        val (from, to) = if (sizea > sizeb) {
+          (rb, ra)
+        } else (ra, rb)
+        size(to) += size(from)
+        rep_(from) = to
+        to
+      } else {
+        ra
+      }
+    }
+    def find(a: Int): Int = {
+      val r = rep_(a)
+      if (a == r)
+        r
+      else {
+        rep_(a) = find(r)
+        rep_(a)
+      }
+    }
+  }
 }
