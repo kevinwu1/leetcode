@@ -14,7 +14,10 @@ object Util {
       s.stripPrefix("[").stripSuffix("]").split(",").map(_.toInt)
   }
   def parseArrayString(s: String): Array[String] = {
-    s.stripPrefix("[\"").stripSuffix("\"]").split("\",\"")
+    s.stripPrefix("[\"")
+      .stripSuffix("\"]")
+      .split(",")
+      .map(_.stripPrefix("\"").stripSuffix("\""))
   }
   def parseArrayArrayInt(s: String): Array[Array[Int]] = {
     import util.chaining.scalaUtilChainingOps
@@ -25,6 +28,16 @@ object Util {
         .stripSuffix("]]")
         .split(raw"],\[", -1)
         .map(arr => parseArrayInt(arr))
+  }
+  def parseArrayArrayString(s: String): Array[Array[String]] = {
+    import util.chaining.scalaUtilChainingOps
+    if (s == "[]")
+      Array()
+    else
+      s.stripPrefix("[")
+        .stripSuffix("]")
+        .split(raw"],\[", -1)
+        .map(arr => parseArrayString(arr))
   }
 
   class TreeNode(
