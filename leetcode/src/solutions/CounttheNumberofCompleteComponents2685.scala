@@ -7,20 +7,15 @@ import solutions.Util.*
 import scala.util.chaining.*
 
 @scala.annotation.experimental
-object MinimumCostWalkinWeightedGraph3108 {
+object CounttheNumberofCompleteComponents2685 {
   // vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
   object Solution {
-    def minimumCost(
-        n: Int,
-        edges: Array[Array[Int]],
-        query: Array[Array[Int]]
-    ): Array[Int] = {
+    def countCompleteComponents(n: Int, edges: Array[Array[Int]]): Int = {
       class UnionFind(n: Int) {
         val rep_ = (0 until n).toArray
-        val size = Array.fill(n)(1)
-        val ands = Array.fill(n)(Integer.MAX_VALUE)
+        val size = Array.fill(n)(0)
 
-        def union(a: Int, b: Int, w: Int): Int = {
+        def union(a: Int, b: Int): Int = {
           val ra = find(a)
           val rb = find(b)
           if (ra != rb) {
@@ -30,12 +25,11 @@ object MinimumCostWalkinWeightedGraph3108 {
               (rb, ra)
             } else (ra, rb)
             size(to) += size(from)
+            size(to) += 1
             rep_(from) = to
-            ands(to) &= ands(from)
-            ands(to) &= w
             to
           } else {
-            ands(ra) &= w
+            size(ra) += 1
             ra
           }
         }
@@ -49,37 +43,32 @@ object MinimumCostWalkinWeightedGraph3108 {
           }
         }
       }
-
       val uf = new UnionFind(n)
-      edges.foreach({ case Array(f, t, w) =>
-        uf.union(f, t, w)
+      edges.foreach({ case Array(a, b) =>
+        uf.union(a, b)
       })
-      query.map({ case Array(f, t) =>
-        val fr = uf.find(f)
-        val tr = uf.find(t)
-        if (fr != tr) -1
-        else uf.ands(fr)
-      })
+      (0 until n)
+        .map(uf.find)
+        .groupBy(identity)
+        .count({ case (rep, els) =>
+          println((rep, els.size, uf.size(rep)))
+          els.size * (els.size - 1) / 2 == uf.size(rep)
+        })
     }
   }
   // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   object Sol2 {
     object Solution {
-      def minimumCost(
-          n: Int,
-          edges: Array[Array[Int]],
-          query: Array[Array[Int]]
-      ): Array[Int] = {
+      def countCompleteComponents(n: Int, edges: Array[Array[Int]]): Int = {
         val rep_ = new Array[Int](n)
-        var i = 0
-        while (i < n) {
-          rep_(i) = i
-          i += 1
+        var h = 0
+        while (h < n) {
+          rep_(h) = h
+          h += 1
         }
-        val size = Array.fill(n)(1)
-        val ands = Array.fill(n)(Integer.MAX_VALUE)
+        val size = new Array[Int](n)
 
-        def union(a: Int, b: Int, w: Int): Int = {
+        def union(a: Int, b: Int): Int = {
           val ra = find(a)
           val rb = find(b)
           if (ra != rb) {
@@ -89,12 +78,11 @@ object MinimumCostWalkinWeightedGraph3108 {
               (rb, ra)
             } else (ra, rb)
             size(to) += size(from)
+            size(to) += 1
             rep_(from) = to
-            ands(to) &= ands(from)
-            ands(to) &= w
             to
           } else {
-            ands(ra) &= w
+            size(ra) += 1
             ra
           }
         }
@@ -107,47 +95,38 @@ object MinimumCostWalkinWeightedGraph3108 {
             rep_(a)
           }
         }
+        var i = 0
+        while (i < edges.length) {
+          union(edges(i)(0), edges(i)(1))
+          i += 1
+        }
 
+        val counts = new Array[Int](n)
         var j = 0
-        while (j < edges.length) {
-          union(edges(j)(0), edges(j)(1), edges(j)(2))
+        while (j < n) {
+          val rep = find(j)
+          counts(rep) += 1
           j += 1
         }
-        val ans = new Array[Int](query.length)
+
+        var total = 0
         var k = 0
-        while (k < ans.length) {
-          val fr = find(query(k)(0))
-          val tr = find(query(k)(1))
-          ans(k) =
-            if (fr != tr) -1
-            else ands(fr)
+        while (k < n) {
+          if (counts(k) != 0)
+            if (counts(k) * (counts(k) - 1) / 2 == size(k))
+              total += 1
           k += 1
         }
-        ans
+        total
       }
     }
   }
   def main(args: Array[String]): Unit = {
-
-    Solution
-      .minimumCost(
-        5,
+    Sol2.Solution
+      .countCompleteComponents(
+        6,
         parseArrayArrayInt(
-          "[[0,1,7],[1,3,7],[1,2,1]]"
-        ),
-        parseArrayArrayInt(
-          "[[0,3],[3,4]]"
-        )
-      )
-      .pipe(pprintln(_))
-    Solution
-      .minimumCost(
-        3,
-        parseArrayArrayInt(
-          "[[0,2,7],[0,1,15],[1,2,6],[1,2,1]]"
-        ),
-        parseArrayArrayInt(
-          "[[1,2]]"
+          "[[0,1],[0,2],[1,2],[3,4]]"
         )
       )
       .pipe(pprintln(_))
