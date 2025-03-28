@@ -4,7 +4,7 @@ import mill._
 import scalalib._
 
 object Shared {
-  val _scalaVersion = "3.3.1"
+  val _scalaVersion = "3.3.5"
   val _ivyDeps = Agg(
     ivy"com.lihaoyi::scalatags:0.12.0",
     ivy"com.lihaoyi::mainargs:0.6.2",
