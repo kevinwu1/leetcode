@@ -15,6 +15,11 @@ import scala.util.chaining._
 @scala.annotation.experimental
 object $name {
   //vvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv
+    object Solution {
+      var doLog = false
+      def println(a: Any): Unit =
+        if (doLog)
+          Console.out.println(a)
         // val rows = grid.length
         // val cols = grid.head.length
 
@@ -42,11 +47,11 @@ object $name {
         //   def apply(p: Pos): Int = arr(p.r)(p.c)
         //   def update(p: Pos, value: Int): Unit = arr(p.r)(p.c) = value
         // }
-
+    }
   //^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   
   def main(args: Array[String]): Unit = {
-
+    Solution.doLog = true
     Solution
       .___(
         parseArrayInt(
